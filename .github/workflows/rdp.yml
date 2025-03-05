@@ -5,7 +5,7 @@ on:
 
 jobs:
   setup-rdp-tunnel:
-    runs-on: windows-latest
+    runs-on: self-hosted
 
     steps:
     - name: Check out the repository
@@ -34,8 +34,6 @@ jobs:
         
     # Prevent workflow to stop
     - name: Keep the GitHub Action Runner Alive
-      run: |
-          Start-Sleep -Seconds 604800  # Adjust the duration based on your needs
 
 
 
