@@ -1,7 +1,7 @@
 name: Playit RDP Tunnel
 
 on:
-  workflow_dispatch:self-hosted
+  workflow_dispatch:
 
 jobs:
   setup-rdp-tunnel:
