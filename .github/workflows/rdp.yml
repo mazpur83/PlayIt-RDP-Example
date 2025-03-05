@@ -1,11 +1,11 @@
 name: Playit RDP Tunnel
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: self-hosted
 
 jobs:
   setup-rdp-tunnel:
-    runs-on: self-hosted  # Menggunakan self-hosted runner
+    runs-on: windows-latest
 
     steps:
     - name: Check out the repository
@@ -14,16 +14,15 @@ jobs:
     - name: Download and Install Playit
       run: |
         Invoke-WebRequest -Uri "https://github.com/playit-cloud/playit-agent/releases/download/v0.15.26/playit-windows-x86_64-signed.exe" -OutFile "$env:USERPROFILE\playit.exe"
-        Start-Sleep -Seconds 25  # Memberi waktu untuk menyelesaikan unduhan
+        Start-Sleep -Seconds 25  # Give some time for the download to complete
 
-    # Mengaktifkan Remote Desktop
+    # Default, optional.
     - name: Enable TS
-      run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -Value 0
+      run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
     - run: Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
     - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
     - run: Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "p@ssw0rd!" -Force)
 
-    # Memulai Playit dan menyiapkan RDP Tunnel
     - name: Start Playit and Set Up RDP Tunnel
       env:
         PLAYIT_AUTH_KEY: ${{ secrets.PL }} 
@@ -31,7 +30,8 @@ jobs:
         Start-Process -FilePath "$env:USERPROFILE\playit.exe" -ArgumentList "--secret $env:PLAYIT_AUTH_KEY" -NoNewWindow -Wait
         Start-Process -FilePath "$env:USERPROFILE\playit.exe" -NoNewWindow
 
-    # Mencegah workflow berhenti
+        
+    # Prevent workflow to stop
     - name: Keep the GitHub Action Runner Alive
       run: |
-        Start-Sleep -Seconds 604800  # Menjaga runner tetap hidup selama 7 hari
+          Start-Sleep -Seconds 2592000  # Adjust the duration based on your needs
