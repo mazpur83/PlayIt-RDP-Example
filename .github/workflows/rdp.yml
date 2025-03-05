@@ -1,7 +1,7 @@
 name: Playit RDP Tunnel
 
 on:
-  workflow_dispatch: self-hosted
+  workflow_dispatch:
 
 jobs:
   setup-rdp-tunnel:
@@ -16,6 +16,7 @@ jobs:
         Invoke-WebRequest -Uri "https://github.com/playit-cloud/playit-agent/releases/download/v0.15.26/playit-windows-x86_64-signed.exe" -OutFile "$env:USERPROFILE\playit.exe"
         Start-Sleep -Seconds 25  # Give some time for the download to complete
 
+        
     # Default, optional.
     - name: Enable TS
       run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
@@ -34,4 +35,9 @@ jobs:
     # Prevent workflow to stop
     - name: Keep the GitHub Action Runner Alive
       run: |
-          Start-Sleep -Seconds 2592000  # Adjust the duration based on your needs
+          Start-Sleep -Seconds 604800  # Adjust the duration based on your needs
+
+
+
+
+        
