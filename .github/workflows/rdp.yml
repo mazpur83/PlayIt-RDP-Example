@@ -5,7 +5,7 @@ on:
 
 jobs:
   setup-rdp-tunnel:
-    runs-on: windows-self-hosted
+    runs-on: windows-lates
 
     steps:
     - name: Check out the repository
